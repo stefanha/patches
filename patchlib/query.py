@@ -137,6 +137,12 @@ def eval_query_term(series, term, scope):
             return is_pull_request(series)
         elif status == 'rfc':
             return is_rfc(series)
+        elif status == 'unapplied':
+            return not (is_broken(series) or
+                       is_obsolete(series) or
+                       is_pull_request(series) or
+                       is_rfc(series) or
+                       is_committed(series))
         elif status == 'committed':
             return is_committed(series)
         elif status == 'reviewed':
