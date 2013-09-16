@@ -54,11 +54,6 @@ def do_build(args):
     from patchlib import build
     return build.main(args)
 
-def strlist(value):
-    if value.find(';') == -1:
-        return [value]
-    return value.split(';')
-
 def main(args):
     import os.path
 
