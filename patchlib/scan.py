@@ -90,7 +90,10 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
             stripped_line = line.strip()
 
             if stripped_line.startswith('git://'):
-                uri, refspec = stripped_line.split(' ', 1)
+                try:
+                    uri, refspec = stripped_line.split(' ', 1)
+                except ValueError:
+                    continue # not a pull refspec
                 patch['pull-request']['uri'] = uri
                 patch['pull-request']['refspec'] = refspec
             elif line.startswith('for you to fetch changes up to '):
