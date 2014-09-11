@@ -188,8 +188,6 @@ def find_extra_tags(msg, leader):
 
     parts = msg.get_message_parts()
     for line in parts[0].get_payload(decode=True).split('\n'):
-        line = line.strip()
-
         if line == '---' or line.startswith('diff '):
             break
 
