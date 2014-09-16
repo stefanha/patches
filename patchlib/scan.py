@@ -209,6 +209,9 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
                 patch_list[0]['tags'] = message.merge_tags(patch_list[0]['tags'], new_tags)
                 patch_list[0]['to'] = message.dedup(patch_list[0]['to'] + to)
                 patch_list[0]['cc'] = message.dedup(patch_list[0]['cc'] + cc)
+
+                if message.is_thanks_applied(reply):
+                    patch_list[0]['applied-by'] = message.parse_email_address(message.get_header(reply, 'From'))
             else:
                 patch = build_patch(commits, merged_heads, reply, trees)
                 patch_list.append(patch)
