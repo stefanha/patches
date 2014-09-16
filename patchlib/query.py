@@ -142,11 +142,14 @@ def eval_query_term(series, term, scope):
                        is_obsolete(series) or
                        is_pull_request(series) or
                        is_rfc(series) or
-                       is_committed(series))
+                       is_committed(series) or
+                       is_applied(series))
         elif status == 'committed':
             return is_committed(series)
         elif status == 'reviewed':
             return is_reviewed(series)
+        elif status == 'applied':
+            return is_applied(series)
         else:
             raise Exception("Unknown status `%s'" % status)
     elif command == 'label':

@@ -230,7 +230,8 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
             series['broken'] = True
 
         if (not series_.is_broken(series) and not series_.is_obsolete(series) and
-            not series_.any_committed(series) and not series_.is_pull_request(series)):
+            not series_.any_committed(series) and not series_.is_pull_request(series) and
+            not series_.is_applied(series)):
             if message.is_cover(series['messages'][0]):
                 tags = series['messages'][0]['tags']
             else:

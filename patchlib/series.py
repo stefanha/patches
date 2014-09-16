@@ -19,6 +19,9 @@ def any_committed(series):
             return True
     return False
 
+def is_applied(series):
+    return 'applied-by' in series['messages'][0]
+
 def is_committed(series):
     committed = False
 

@@ -76,7 +76,8 @@ than subject text.  The following prefixes are supported:
 - `status:pull-request` show pull requests
 - `status:rfc` show RFC postings
 - `status:committed` show committed series
-- `status:unapplied` short hand for `not (status:broken or status:obsolete or status:pull-request or status:rfc or status:committed)`
+- `status:applied` show series with a "Thanks, applied" reply
+- `status:unapplied` short hand for `not (status:broken or status:obsolete or status:pull-request or status:rfc or status:committed or status:applied)`
 - `status:reviewed` show series where every patch has at least one Reviewed-by
 - `to:ADDRESS` show series where `ADDRESS` is on the receipent list
 - `from:ADDRESS` show series where `ADDRESS` is the sender
