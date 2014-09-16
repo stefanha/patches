@@ -23,7 +23,8 @@ def setup_mboxes():
 def add_tags(msg, tags):
     lines = []
 
-    payload = msg.get_payload()
+    charset = msg.get_content_charset('utf-8')
+    payload = msg.get_payload(decode=True).decode(charset)
     mid = msg['Message-ID']
     if mid:
         if mid.startswith('<'):
@@ -102,7 +103,14 @@ def generate_mbox(messages, full_tags):
     mbox = mailbox.mbox(tmp_mbox_path, create=True)
     for message, tags in messages:
         msg = message.get_message_parts()[0]
-        msg.set_payload(add_tags(msg, merge_tags(full_tags, tags)))
+        new_payload = add_tags(msg, merge_tags(full_tags, tags))
+
+        # Drop content transfer encoding so msg.set_payload() will re-encode
+        if 'content-transfer-encoding' in msg:
+            del msg['content-transfer-encoding']
+
+        charset = msg.get_content_charset('utf-8')
+        msg.set_payload(new_payload.encode(charset), charset)
         mbox.add(msg)
     mbox.flush()
     mbox.close()

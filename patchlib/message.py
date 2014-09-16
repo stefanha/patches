@@ -183,11 +183,15 @@ def dedup(lst):
             new_lst.append(item)
     return new_lst
 
+def get_payload(msg):
+    parts = msg.get_message_parts()
+    charset = parts[0].get_content_charset('utf-8')
+    return parts[0].get_payload(decode=True).decode(charset)
+
 def find_extra_tags(msg, leader):
     extra_tags = {}
 
-    parts = msg.get_message_parts()
-    for line in parts[0].get_payload(decode=True).split('\n'):
+    for line in get_payload(msg).split('\n'):
         if line == '---' or line.startswith('diff '):
             break
 
@@ -208,8 +212,7 @@ def find_extra_tags(msg, leader):
     return extra_tags, dedup(to_addrs), dedup(cc_addrs)
 
 def is_thanks_applied(msg):
-    parts = msg.get_message_parts()
-    for line in parts[0].get_payload(decode=True).split('\n'):
+    for line in get_payload(msg).split('\n'):
         for pattern in ('Thanks, applied',
                         'Applied to ',
                         'Applied, thanks'):
