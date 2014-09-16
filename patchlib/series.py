@@ -13,7 +13,7 @@
 import message
 import config
 
-def any_applied(series):
+def any_committed(series):
     for message in series['messages']:
         if message.has_key('commit'):
             return True
