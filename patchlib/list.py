@@ -127,6 +127,6 @@ def main(args):
     elif args.format == 'commits':
         dump_commits(patches, args)
     else:
-        raise Exception('unknown output type %s' % args.output)
+        raise Exception('unknown format %s' % args.format)
 
     return 0
