@@ -196,9 +196,6 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
         patch_list = [ patch ]
         message_list = []
 
-        if not message.is_cover(patch):
-            message_list.append((top, patch['tags']))
-
         for reply in top.get_replies():
             # notmuch won't let us call get_replies twice so we have to do
             # everything in a single loop.
@@ -216,6 +213,10 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
                 patch = build_patch(commits, merged_heads, reply, trees)
                 patch_list.append(patch)
                 message_list.append((reply, patch['tags']))
+
+        # now we're done with replies so tags for the top patch are known
+        if not message.is_cover(patch_list[0]):
+            message_list.insert(0, (top, patch_list[0]['tags']))
     
         series = { 'messages': patch_list,
                    'total_messages': thread.get_total_messages() }
