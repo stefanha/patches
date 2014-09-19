@@ -109,8 +109,11 @@ def generate_mbox(messages, full_tags):
         if 'content-transfer-encoding' in msg:
             del msg['content-transfer-encoding']
 
-        charset = msg.get_content_charset('utf-8')
-        msg.set_payload(new_payload.encode(charset), charset)
+        # Change charset to UTF-8 to guarantee that we can represent all
+        # characters.  Think about the case where the patch email was ASCII and
+        # a reviewer with a non-ASCII name replied with a Reviewed-by tag, now
+        # the patch can no longer be represented by ASCII.
+        msg.set_payload(new_payload.encode('utf-8'), 'utf-8')
         mbox.add(msg)
     mbox.flush()
     mbox.close()
