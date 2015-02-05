@@ -186,7 +186,11 @@ def dedup(lst):
 def get_payload(msg):
     parts = msg.get_message_parts()
     charset = parts[0].get_content_charset('utf-8')
-    return parts[0].get_payload(decode=True).decode(charset)
+    try:
+        return parts[0].get_payload(decode=True).decode(charset)
+    except:
+        # Emails with bogus charset names have been known to exist
+        return parts[0].get_payload(decode=True).decode('utf-8')
 
 def find_extra_tags(msg, leader):
     extra_tags = {}
