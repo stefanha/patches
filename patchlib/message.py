@@ -89,7 +89,10 @@ def decode_subject_text(subject):
 
                 index = word.find('/')
                 if index != -1 and is_digit(word[0]) and is_digit(word[index + 1]):
-                    ret['n'], ret['m'] = map(int, word.split('/', 1))
+                    try:
+                        ret['n'], ret['m'] = map(int, word.split('/', 1))
+                    except ValueError:
+                        pass
                 elif word[0] == 'V' and is_digit(word[1]):
                     try:
                         ret['version'] = int(word[1:])
