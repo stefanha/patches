@@ -17,6 +17,7 @@ from series import *
 from email.header import Header
 from list import search_subseries
 from UserDict import UserDict
+from message import escape_message_id
 
 def format_addr(addr):
     name = addr['name']
@@ -31,7 +32,7 @@ def encode_address_list(addrs):
     return ', '.join(map(format_addr, addrs))
 
 def try_to_send(args, notified_dir, sender, message, payload):
-    mid = message['message-id']
+    mid = escape_message_id(message['message-id'])
     if os.access(notified_dir + '/mid/' + mid, os.F_OK):
         return
 

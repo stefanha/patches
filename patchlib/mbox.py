@@ -12,7 +12,7 @@
 
 import shutil, os, mailbox, hashlib
 import config
-from message import merge_tags, parse_tag
+from message import merge_tags, parse_tag, escape_message_id
 
 def setup_mboxes():
     try:
@@ -95,7 +95,7 @@ def add_tags(msg, tags):
 
 def generate_mbox(messages, full_tags):
     mbox_dir = config.get_mbox_path()
-    mid = messages[0][0].get_message_id()
+    mid = escape_message_id(messages[0][0].get_message_id())
 
     tmp_mbox_path = '%s/tmp-%s' % (mbox_dir, mid)
     mbox_path = '%s/mbox-%s' % (mbox_dir, mid)

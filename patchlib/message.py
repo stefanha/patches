@@ -14,6 +14,10 @@ import config
 from email.header import decode_header
 from email.utils import parseaddr
 
+def escape_message_id(mid):
+    '''Escape a Message-ID so it is safe for filenames'''
+    return mid.replace('%', '%%').replace('/', '%2F')
+
 def parse_email_address(value):
     name, mail = parseaddr(value)
     return { 'name': name, 'email': mail }
