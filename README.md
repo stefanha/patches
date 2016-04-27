@@ -107,18 +107,14 @@ patches is not meant to be a tool to review patches directly.  Instead, it is
 designed to integrate with mail clients for displaying patches.
 
 The `list` command can be passed `--format=notmuch` which will cause
-patches to output a notmuch search query instead of a stylized output.  The
-included patches.el wraps this in a ELISP interactive function that will invoke
-the notmuch-search major mode directly.
+patches to output a notmuch search query instead of a stylized output.
 
 Applying Patches and Pull Requests
 ----------------------------------
 
 Given a message-id of any patch within a series, patches can apply a patch
 series or pull request.  This is meant to allow integration with mail clients
-that can call out to a external program to process a mail.  An ELISP function
-is provided in patches.el that can be bound to a key press to apply a patch
-directly from the notmuch-search major mode.
+that can call out to a external program to process a mail.
 
 `patches apply` takes a query string, so you usually want to provide a search
 string with an `id:` function.
