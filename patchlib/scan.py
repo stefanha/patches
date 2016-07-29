@@ -190,8 +190,17 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
         if not message.is_patch(top):
             continue
 
-        patch = build_patch(commits, merged_heads,
-                            top, trees, leader=True)
+        # The parser chokes on emails too often, simply report the error and
+        # skip the thread so that scan can complete.
+        try:
+            patch = build_patch(commits, merged_heads,
+                                top, trees, leader=True)
+        except:
+            import traceback
+            import sys
+            sys.stderr.write('Message-Id: %s\n' % top.get_message_id())
+            traceback.print_exc()
+            continue
 
         patch_list = [ patch ]
         message_list = []
