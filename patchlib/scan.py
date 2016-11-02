@@ -86,14 +86,20 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
         parts = msg.get_message_parts()
         patch['pull-request'] = {}
 
+        extract_repo = False
         for line in parts[0].get_payload().split('\n'):
             stripped_line = line.strip()
 
-            if stripped_line.startswith('git://'):
+            if stripped_line == 'are available in the git repository at:':
+                extract_repo = True
+            elif extract_repo and stripped_line:
+                extract_repo = False
+
                 try:
                     uri, refspec = stripped_line.split(' ', 1)
                 except ValueError:
                     continue # not a pull refspec
+
                 patch['pull-request']['uri'] = uri
                 patch['pull-request']['refspec'] = refspec
             elif line.startswith('for you to fetch changes up to '):
