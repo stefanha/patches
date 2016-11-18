@@ -12,7 +12,7 @@
 
 import shutil, os, mailbox, hashlib
 import config
-from message import merge_tags, parse_tag, escape_message_id
+from message import get_payload, merge_tags, parse_tag, escape_message_id
 
 def setup_mboxes():
     try:
@@ -20,17 +20,9 @@ def setup_mboxes():
     except Exception, e:
         pass
 
-def add_tags(msg, tags):
+def add_tags(message, tags):
     lines = []
-
-    charset = msg.get_content_charset('utf-8')
-    payload = msg.get_payload(decode=True).decode(charset)
-    mid = msg['Message-ID']
-    if mid:
-        if mid.startswith('<'):
-            mid = mid[1:]
-        if mid.endswith('>'):
-            mid = mid[:-1]
+    payload = get_payload(message)
 
     in_sob = False
     done = False
@@ -79,6 +71,8 @@ def add_tags(msg, tags):
                     for val in tags[key]:
                         if val:
                             lines.append('%s: %s' % (key, val))
+
+                mid = message.get_message_id()
                 if mid:
                     lines.append('Message-id: %s' % mid)
 
@@ -102,8 +96,9 @@ def generate_mbox(messages, full_tags):
 
     mbox = mailbox.mbox(tmp_mbox_path, create=True)
     for message, tags in messages:
+        new_payload = add_tags(message, merge_tags(full_tags, tags))
+
         msg = message.get_message_parts()[0]
-        new_payload = add_tags(msg, merge_tags(full_tags, tags))
 
         # Drop content transfer encoding so msg.set_payload() will re-encode
         if 'content-transfer-encoding' in msg:
