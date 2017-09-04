@@ -197,7 +197,7 @@ def get_payload(msg):
         return parts[0].get_payload(decode=True).decode(charset)
     except:
         # Emails with bogus charset names have been known to exist
-        return parts[0].get_payload(decode=True).decode('utf-8')
+        return parts[0].get_payload(decode=True).decode('latin1')
 
 def find_extra_tags(msg, leader):
     extra_tags = {}
