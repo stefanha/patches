@@ -37,7 +37,11 @@ def build_thread_leaders(q, then):
     for thread in q.search_threads():
         oldest = min(oldest, thread.get_oldest_date())
 
-        top = list(thread.get_toplevel_messages())[0]
+        try:
+            top = list(thread.get_toplevel_messages())[0]
+        except notmuch.errors.NullPointerError:
+            continue
+
         if not message.is_patch(top):
             continue
 
@@ -191,7 +195,10 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
 
     patches = []
     for thread in q.search_threads():
-        top = list(thread.get_toplevel_messages())[0]
+        try:
+            top = list(thread.get_toplevel_messages())[0]
+        except notmuch.errors.NullPointerError:
+            continue
 
         if not message.is_patch(top):
             continue
