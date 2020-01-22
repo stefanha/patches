@@ -10,13 +10,13 @@
 # See the COPYING file in the top-level directory.
 #
 
-import notmuch, json, datetime, config
-import gitcmd, message, mbox
-import series as series_
+import notmuch, json, datetime
+from . import config, gitcmd, message, mbox
+from . import series as series_
 from time import time
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 from email.header import decode_header
-from util import *
+from .util import *
 import os
 
 def days_to_seconds(value):
@@ -61,7 +61,7 @@ def build_thread_leaders(q, then):
 
         full_thread_leaders[stripped_subject] = val
 
-        if thread_leaders.has_key(stripped_subject):
+        if stripped_subject in thread_leaders:
             new_version = max(version, thread_leaders[stripped_subject])
             thread_leaders[stripped_subject] = new_version
         else:
@@ -86,7 +86,7 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
     sub = message.decode_subject(msg)
     stripped_subject = sub['subject']
 
-    if sub.has_key('pull-request') and sub['pull-request']:
+    if 'pull-request' in sub and sub['pull-request']:
         parts = msg.get_message_parts()
         patch['pull-request'] = {}
 
@@ -123,7 +123,7 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
         # obsolete.  We only look at the thread leader which is either the
         # cover letter or the very first patch.
         patch['obsolete'] = True
-    elif commits.has_key(stripped_subject):
+    elif stripped_subject in commits:
         # If there are multiple commits that have this subject, just pick
         # the first one.
         c = commits[stripped_subject]
@@ -140,9 +140,9 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
     patch['message-id'] = msg.get_message_id()
     if sub['rfc']:
         patch['rfc'] = sub['rfc']
-    if sub.has_key('for-release'):
+    if 'for-release' in sub:
         patch['for-release'] = sub['for-release']
-    if sub.has_key('tags'):
+    if 'tags' in sub:
         patch['subject-tags'] = sub['tags']
 
     patch['from'] = message.parse_email_address(message.get_header(msg, 'From'))
@@ -172,7 +172,7 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
 
     db = notmuch.Database(notmuch_dir)
 
-    now = long(time())
+    now = int(time())
     then = now - days_to_seconds(search_days)
 
     query = '%s (subject:PATCH or subject:PULL) %s..%s' % (mail_query, then, now)
@@ -269,8 +269,8 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
 
 def main(args):
     import json, config
-    import data
-    import hooks
+    from . import data
+    from . import hooks
 
     hooks.invoke('scan.pre')
     notmuch_dir = config.get_notmuch_dir()

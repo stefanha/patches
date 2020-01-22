@@ -11,13 +11,13 @@
 #
 
 import shutil, os, mailbox, hashlib
-import config
-from message import get_payload, merge_tags, parse_tag, escape_message_id
+from . import config
+from .message import get_payload, merge_tags, parse_tag, escape_message_id
 
 def setup_mboxes():
     try:
         os.makedirs(config.get_mbox_path())
-    except Exception, e:
+    except Exception as e:
         pass
 
 def add_tags(message, tags):
@@ -45,11 +45,11 @@ def add_tags(message, tags):
                 continue
 
             if tag:
-                key = tag.keys()[0]
+                key = list(tag.keys())[0]
                 value = tag[key]
 
                 # always drop message-id tags
-                if key == 'Message-id':
+                if key.lower() == 'message-id':
                     continue
 
                 # if we hit a tag and there's whitespace before the tag, preserve it
@@ -128,15 +128,15 @@ def get_hash(mbox_path):
     if not os.access(real_path, os.R_OK):
         return None
 
-    with open(real_path, 'r') as fp:
+    with open(real_path, 'rb') as fp:
         data = fp.read()
 
     # The first line of each message contains a date from the mailer which
     # changes whenever the mbox is regenerated.  Drop it from the hash
     # calculation
     def fn(line):
-        return not line.startswith('From MAILER-DAEMON ')
-    data = '\n'.join(filter(fn, data.split('\n')))
+        return not line.startswith(b'From MAILER-DAEMON ')
+    data = b'\n'.join(filter(fn, data.split(b'\n')))
 
     h = hashlib.sha1()
     h.update(data)

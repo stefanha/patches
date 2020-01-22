@@ -10,8 +10,9 @@
 # See the COPYING file in the top-level directory.
 #
 
-import fetch, config, os
-from ConfigParser import RawConfigParser
+import os
+from configparser import RawConfigParser
+from . import fetch, config
 
 def main(args):
     filename = os.getcwd() + '/.patchesrc'

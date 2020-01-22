@@ -10,8 +10,8 @@
 # See the COPYING file in the top-level directory.
 #
 
-import config
-from commands import getstatusoutput
+from . import config
+from subprocess import getstatusoutput
 from subprocess import check_output
 
 def git(*args, **kwds):
@@ -25,7 +25,7 @@ def git(*args, **kwds):
     else:
         git_dir = ' --git-dir="%s"' % git_dir
 
-    s, o = getstatusoutput('git%s %s' % (git_dir, ' '.join(map(lambda x: '"%s"' % x, args))))
+    s, o = getstatusoutput('git%s %s' % (git_dir, ' '.join(['"%s"' % x for x in args])))
     if s != 0:
         raise Exception(o)
     return o
@@ -97,7 +97,7 @@ def get_commits(since, trees):
 
         for commit in pairs:
             s = commit['summary']
-            if mapping.has_key(s):
+            if s in mapping:
                 hsh = mapping[s]
                 if type(hsh) != list:
                     mapping[s] = [commit]

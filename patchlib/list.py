@@ -10,12 +10,12 @@
 # See the COPYING file in the top-level directory.
 #
 
-import query
-import message, config, data
+from . import query
+from . import message, config, data
 
 def encode(data):
     if type(data) == list:
-        return map(encode, data)
+        return list(map(encode, data))
     elif type(data) == tuple:
         return tuple(map(encode, data))
     elif type(data) == dict:
@@ -23,23 +23,21 @@ def encode(data):
         for key in data:
             new_dict[encode(key)] = encode(data[key])
         return new_dict
-    elif type(data) in [str, unicode]:
-        return unicode(data).encode('utf8')
     else:
         return data
 
 def out(*args):
     if len(args) == 0:
-        print
+        print()
         return
     
     fmt = encode(args[0])
     args = args[1:]
 
     if len(args):
-        print encode(fmt) % tuple(encode(args))
+        print(encode(fmt) % tuple(encode(args)))
     else:
-        print encode(fmt)
+        print(encode(fmt))
 
 def search_subseries(patches, query_str):
     sub_series = []
@@ -88,7 +86,7 @@ def dump_commits(patches, args):
     for series in find_subseries(patches, args):
         for msg in series['messages']:
             if 'commit' in msg:
-                print msg['commit']
+                print(msg['commit'])
 
 def dump_full_query(patches, args):
     for series in find_subseries(patches, args):

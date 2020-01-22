@@ -10,7 +10,8 @@
 # See the COPYING file in the top-level directory.
 #
 
-import data, sys
+import sys
+from . import data
 
 def is_reviewed(patch):
     for tag in patch['tags']:
@@ -64,12 +65,12 @@ for series in patches:
         else:
             total_unreviewed += 1
 
-print "Total Series,", total_series
-print "Total Patches,", total_patches
-print "Total Reviews,", total_reviews
-print "Total Obsolete,", total_obsolete
-print "Total Broken,", total_broken
-print "Total Committed,", total_committed
-print "Total Not Builds,", total_not_builds
-print "Total Not Applies,", total_not_applies
-print "Total Unreviewed,", total_unreviewed
+print("Total Series,", total_series)
+print("Total Patches,", total_patches)
+print("Total Reviews,", total_reviews)
+print("Total Obsolete,", total_obsolete)
+print("Total Broken,", total_broken)
+print("Total Committed,", total_committed)
+print("Total Not Builds,", total_not_builds)
+print("Total Not Applies,", total_not_applies)
+print("Total Unreviewed,", total_unreviewed)

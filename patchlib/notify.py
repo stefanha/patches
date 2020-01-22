@@ -12,12 +12,12 @@
 
 import email.message, email.utils
 import os, smtplib, time
-import config, data
-from series import *
+from . import config, data
+from .series import *
 from email.header import Header
-from list import search_subseries
+from .list import search_subseries
 from UserDict import UserDict
-from message import escape_message_id
+from .message import escape_message_id
 
 def format_addr(addr):
     name = addr['name']
@@ -41,7 +41,7 @@ def try_to_send(args, notified_dir, sender, message, payload):
     receipents = [ message['from'] ]
     receipents += message['to']
     receipents += message['cc']
-    receipents = map(format_addr, receipents)
+    receipents = list(map(format_addr, receipents))
 
     msg['From'] = sender
     msg['Subject'] = 'Re: %s' % message['subject']
@@ -78,8 +78,8 @@ def try_to_send(args, notified_dir, sender, message, payload):
         f.flush()
         f.close()
 
-    print txt_msg
-    print '-' * 80
+    print(txt_msg)
+    print('-' * 80)
 
 class SeriesDict(UserDict):
     def __init__(self, series):
@@ -108,13 +108,13 @@ def notify(args, patches, notified_dir, query, template):
         try_to_send(args, notified_dir, sender, series['messages'][0], template % sd)
 
 def main(args):
-    import config
+    from . import config
 
     notified_dir = config.get_notified_dir()
 
     try:
         os.makedirs(notified_dir + '/mid')
-    except Exception, e:
+    except Exception as e:
         pass
 
     if args.smtp_server != None:
@@ -127,10 +127,10 @@ def main(args):
 
     nots = []
     if args.labels:
-        print args.labels
+        print(args.labels)
         def fn(x):
             return (x, config.get_notification(x))
-        nots = map(fn, args.labels)
+        nots = list(map(fn, args.labels))
     else:
         nots = config.get_notifications()
 

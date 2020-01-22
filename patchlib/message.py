@@ -10,7 +10,7 @@
 # See the COPYING file in the top-level directory.
 #
 
-import config
+from . import config
 from email.header import decode_header
 from email.utils import parseaddr
 
@@ -27,25 +27,25 @@ def parse_email_addresses(value):
         if value.find(', ') == -1:
             return [ parse_email_address(value) ]
         else:
-            return map(parse_email_address, value.split(', '))
+            return list(map(parse_email_address, value.split(', ')))
     return []
 
 def get_header(msg, name):
-    value = u''
+    value = ''
 
     # notmuch's Message.get_header() doesn't handle chunked encoded headers
     # correctly so we fix it here.
     header = msg.get_header(name)
     if header.find('=?') != -1:
         for chunk, encoding in decode_header(header):
-            value += unicode(chunk, encoding or 'ascii')
+            value += str(chunk, encoding or 'ascii')
     else:
-        value = unicode(header)
+        value = str(header)
 
     return value
 
 def get_subject(msg):
-    list_tag = u'[%s] ' % config.get_list_tag();
+    list_tag = '[%s] ' % config.get_list_tag();
     subject = get_header(msg, 'Subject')
     if subject.startswith(list_tag):
         subject = subject[len(list_tag):].strip()
@@ -79,7 +79,7 @@ def decode_subject_text(subject):
         subject = subject.lstrip()
 
         if bracket:
-            words = map(unicode.upper, bracket.split(' '))
+            words = list(map(str.upper, bracket.split(' ')))
 
             for word in words:
                 if not word:
@@ -94,13 +94,13 @@ def decode_subject_text(subject):
                 index = word.find('/')
                 if index != -1 and is_digit(word[0]) and is_digit(word[index + 1]):
                     try:
-                        ret['n'], ret['m'] = map(int, word.split('/', 1))
+                        ret['n'], ret['m'] = list(map(int, word.split('/', 1)))
                     except ValueError:
                         pass
                 elif word[0] == 'V' and is_digit(word[1]):
                     try:
                         ret['version'] = int(word[1:])
-                    except Exception, e:
+                    except Exception as e:
                         pass
                 elif word.startswith('FOR-') and is_digit(word[4]):
                     ret['for-release'] = word[4:]
@@ -238,7 +238,7 @@ def cmp_patch(a, b):
     return cmp(a_n, b_n)
 
 def is_cover(msg):
-    if msg.has_key('cover') and msg['cover']:
+    if 'cover' in msg and msg['cover']:
         return True
     return False
 

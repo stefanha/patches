@@ -1,13 +1,14 @@
-import config, mbox, data, apply, list, gitcmd, util
+from . import config, mbox, data, apply, list, gitcmd, util
 import shutil, errno, os, sys, json
 from subprocess import check_call
-from util import call_teed_output
-from series import *
+from .util import call_teed_output
+from .series import *
 
 def try_rmtree(path):
     try:
         shutil.rmtree(path)
-    except OSError, (num, msg):
+    except OSError as xxx_todo_changeme:
+        (num, msg) = xxx_todo_changeme.args
         if num != errno.ENOENT:
             raise
 
@@ -33,7 +34,7 @@ def try_to_build(series, working_dir, commit, bot):
         if s != 0:
             return s, steps
 
-    steps = map(lambda (name, s, o): (name, s, ''), steps)
+    steps = [(name_s_o[0], name_s_o[1], '') for name_s_o in steps]
 
     return 0, steps
 

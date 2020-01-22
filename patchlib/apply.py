@@ -10,11 +10,11 @@
 # See the COPYING file in the top-level directory.
 #
 
-import config, mbox, gitcmd, data
-from list import find_subseries
-from series import *
+from . import config, mbox, gitcmd, data
+from .list import find_subseries
+from .series import *
 from subprocess import call, check_output
-from util import call_teed_output
+from .util import call_teed_output
 import os
 
 def apply_patch(pathname, **kwds):
@@ -95,8 +95,8 @@ def main(args):
             s, _ = apply_series(series, **kwds)
             if s:
                 return s
-        except Exception, e:
-            print str(e)
+        except Exception as e:
+            print(str(e))
             return 1
 
     return 0

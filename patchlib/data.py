@@ -15,7 +15,7 @@ import json
 VERSION = 1
 
 def parse_json(data, full=False):
-    info = json.loads(data, encoding='utf8')
+    info = json.loads(data)
     if info['version'] != VERSION:
         raise Exception("Unsupported JSON version %s" % info["version"])
     if full:

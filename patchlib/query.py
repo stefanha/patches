@@ -10,8 +10,9 @@
 # See the COPYING file in the top-level directory.
 #
 
-import config, message, email.utils
-from series import *
+import email.utils
+from . import config, message
+from .series import *
 
 def match_flat_email_address(lhs, rhs):
     val = {}
@@ -260,13 +261,13 @@ def eval_query(series, terms, scope='any'):
 if __name__ == '__main__':
     a = '(status:foo or status:bar)'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))
     a = 'not (status:foo or status:bar)'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))
     a = 'not status:foo or status:bar'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))

@@ -1,18 +1,7 @@
-#
-# patches - QEMU Patch Tracking System
-#
-# Copyright IBM, Corp. 2013
-#
-# Authors:
-#  Anthony Liguori <aliguori@us.ibm.com>
-#
-# This work is licensed under the terms of the GNU GPLv2 or later.
-# See the COPYING file in the top-level directory.
-#
-
-from urllib2 import urlopen, HTTPError
-from util import *
-import config, mbox, data
+from urllib.request import urlopen
+from urllib.error import HTTPError
+from .util import *
+from . import config, mbox, data
 import os, json
 
 def main(args):
@@ -30,21 +19,21 @@ def fetch(url=None):
 
     try:
         os.makedirs(config.get_mbox_path())
-    except Exception, e:
+    except Exception as e:
         pass
 
     fp = urlopen(url)
     try:
-        json_data = fp.read()
+        json_data = fp.read().decode('utf-8')
     finally:
         fp.close()
 
     full_patches = data.parse_json(json_data, full=True)
     patches = full_patches['patches']
 
-    print 'Fetched info on %d patch series' % len(patches)
+    print('Fetched info on %d patch series' % len(patches))
     if 'links' in full_patches:
-        print 'Fetching links...'
+        print('Fetching links...')
 
         mids = {}
         for name in full_patches['links']:
@@ -52,7 +41,7 @@ def fetch(url=None):
 
             fp = urlopen(url)
             try:
-                link_data = fp.read()
+                link_data = fp.read().decode('utf-8')
             finally:
                 fp.close()
 
@@ -72,7 +61,7 @@ def fetch(url=None):
             if mid in mids:
                 series['buildbots'] = mids[mid]
 
-    print 'Fetching mboxes...'
+    print('Fetching mboxes...')
 
     for series in patches:
         if 'mbox_path' not in series:
@@ -85,13 +74,13 @@ def fetch(url=None):
         if 'mbox_hash' in series and series['mbox_hash'] == old_hash:
             continue
 
-        print 'Fetching mbox for %s' % series['messages'][0]['subject']
+        print('Fetching mbox for %s' % series['messages'][0]['subject'])
         base, _ = url.rsplit('/', 1)
 
         try:
             fp = urlopen(base + '/' + series['mbox_path'])
-        except HTTPError, e:
-            print 'Skipping mbox %s' % series['mbox_path']
+        except HTTPError as e:
+            print('Skipping mbox %s' % series['mbox_path'])
             continue
             
         try:
@@ -102,7 +91,6 @@ def fetch(url=None):
         replace_file(mbox.get_real_path(series['mbox_path']), mbox_data)
 
     json_data = json.dumps(full_patches, indent=2,
-                           separators=(',', ': '),
-                           encoding='iso-8859-1')
+                           separators=(',', ': '))
 
-    replace_file(config.get_json_path(), json_data)
+    replace_file(config.get_json_path(), json_data.encode('utf-8'))
