@@ -108,7 +108,10 @@ def generate_mbox(messages, full_tags):
         # characters.  Think about the case where the patch email was ASCII and
         # a reviewer with a non-ASCII name replied with a Reviewed-by tag, now
         # the patch can no longer be represented by ASCII.
-        msg.set_payload(new_payload.encode('utf-8'), 'utf-8')
+        try:
+            msg.set_payload(new_payload.encode('utf-8'), 'utf-8')
+        except:
+            continue # skip broken messages
         mbox.add(msg)
     mbox.flush()
     mbox.close()
