@@ -268,7 +268,7 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
     return patches
 
 def main(args):
-    import json, config
+    import json
     from . import data
     from . import hooks
 
