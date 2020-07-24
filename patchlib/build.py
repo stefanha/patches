@@ -57,8 +57,7 @@ def run_bot(patches, working_dir, commit, bot, query):
     try_rmtree(working_dir)
     util.replace_file(config.get_buildbot_json(bot),
                       json.dumps(results, indent=2,
-                                 separators=(',', ': '),
-                                 encoding='iso-8859-1'))
+                                 separators=(',', ': ')).encode('iso-8859-1'))
 
 def main(args):
     with open(config.get_json_path(), 'rb') as fp:

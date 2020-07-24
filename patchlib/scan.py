@@ -297,8 +297,7 @@ def main(args):
 
     replace_file(config.get_json_path(),
                  json.dumps(info, indent=2,
-                            separators=(',', ': '),
-                            encoding='iso-8859-1'))
+                            separators=(',', ': ')).encode('iso-8859-1'))
 
     hooks.invoke('scan.post')
 
