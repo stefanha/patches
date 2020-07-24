@@ -235,7 +235,7 @@ def cmp_patch(a, b):
     a_n = parse_subject(a[0])[0]
     b_n = parse_subject(b[0])[0]
 
-    return cmp(a_n, b_n)
+    return (a_n > b_n) - (a_n < b_n)
 
 def is_cover(msg):
     if 'cover' in msg and msg['cover']:

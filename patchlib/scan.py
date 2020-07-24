@@ -54,9 +54,9 @@ def build_thread_leaders(q, then):
         val.append((top.get_date(), version))
 
         def fn(lhs, rhs):
-            ret = cmp(lhs[0], rhs[0])
+            ret = (lhs[0] > rhs[0]) - (lhs[0] < rhs[0])
             if ret == 0:
-                ret = cmp(lhs[1], rhs[1])
+                ret = (lhs[1] > rhs[1]) - (lhs[1] < rhs[1])
             return ret
         val.sort(key=functools.cmp_to_key(fn))
 
@@ -280,7 +280,9 @@ def main(args):
     trees = config.get_trees()
 
     def sort_patch(a, b):
-        return cmp(b['messages'][0]['full_date'], a['messages'][0]['full_date'])
+        b_d = b['messages'][0]['full_date']
+        a_d = a['messages'][0]['full_date']
+        return (b_d > a_d) - (b_d < a_d)
 
     patches = build_patches(notmuch_dir, search_days, mail_query, trees)
     patches.sort(key=functools.cmp_to_key(sort_patch))
