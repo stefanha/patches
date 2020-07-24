@@ -11,6 +11,7 @@
 #
 
 import notmuch, json, datetime
+import functools
 from . import config, gitcmd, message, mbox
 from . import series as series_
 from time import time
@@ -57,7 +58,7 @@ def build_thread_leaders(q, then):
             if ret == 0:
                 ret = cmp(lhs[1], rhs[1])
             return ret
-        val.sort(fn)
+        val.sort(key=functools.cmp_to_key(fn))
 
         full_thread_leaders[stripped_subject] = val
 
@@ -246,7 +247,7 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
         if series_.is_pull_request(series):
             series = fixup_pull_request(series, merged_heads)
     
-        message_list.sort(message.cmp_patch)
+        message_list.sort(key=functools.cmp_to_key(message.cmp_patch))
 
         m = message.parse_subject(top)[1]
         if len(message_list) != m:
@@ -282,7 +283,7 @@ def main(args):
         return cmp(b['messages'][0]['full_date'], a['messages'][0]['full_date'])
 
     patches = build_patches(notmuch_dir, search_days, mail_query, trees)
-    patches.sort(sort_patch)
+    patches.sort(key=functools.cmp_to_key(sort_patch))
 
     links = config.get_links()
 
