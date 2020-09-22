@@ -1,6 +1,19 @@
 patches Patch Tracking System
 =============================
 
+Status
+------
+This tool is no longer maintained. A number of alternatives exist:
+
+- [b4](https://git.kernel.org/pub/scm/utils/b4/b4.git/tree/man/b4.5.rst) (lore.kernel.org)
+- [Patchwork's pwclient](http://patchwork.ozlabs.org/)
+- [Patchew](https://patchew.org/)
+
+You can apply a patch series with b4 like this:
+
+    $ pip install --user b4
+    $ b4 am --add-my-sob -o - MESSAGE_ID | git am -m
+
 About
 -----
 
