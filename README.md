@@ -41,7 +41,7 @@ Quick Start
 
 To get started with the QEMU project:
 
-    $ patches fetch http://wiki.qemu.org/patches/patches.json
+    $ patches fetch http://patches.qemu.org/patches.json
     $ patches list
     Message-id: 1357498122-1129-1-git-send-email-afaerber@suse.de
     From: Andreas Färber <afaerber@suse.de>
@@ -68,7 +68,7 @@ URL by creating a `~/.patchesrc` file with the following contents:
 
     [fetch]
     # Default URL to use if 'patches fetch' is not given an argument:
-    url=http://wiki.qemu.org/patches/patches.json
+    url=http://patches.qemu.org/patches.json
 
 Search Language
 ---------------
