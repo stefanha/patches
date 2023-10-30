@@ -88,14 +88,13 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
     stripped_subject = sub['subject']
 
     if 'pull-request' in sub and sub['pull-request']:
-        parts = msg.get_message_parts()
         patch['pull-request'] = {}
 
         extract_repo = False
-        for line in parts[0].get_payload().split('\n'):
+        for line in message.get_payload(msg).split('\n'):
             stripped_line = line.strip()
 
-            if stripped_line == 'are available in the git repository at:':
+            if stripped_line.lower() == 'are available in the git repository at:':
                 extract_repo = True
             elif extract_repo and stripped_line:
                 extract_repo = False
