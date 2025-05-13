@@ -57,7 +57,7 @@ def find_subseries(patches, args):
     return search_subseries(patches, ' '.join(args.query))
 
 def dump_notmuch_query(patches, args):
-    import notmuch
+    import notmuch2
 
     sub_series = find_subseries(patches, args)
     if not sub_series:
@@ -68,12 +68,11 @@ def dump_notmuch_query(patches, args):
 
     query = ' or '.join(map(fn, sub_series))
 
-    db = notmuch.Database(config.get_notmuch_dir())
-    q = notmuch.Query(db, query)
+    db = notmuch2.Database(config.get_notmuch_dir())
 
     tids = []
-    for thread in q.search_threads():
-        tids.append('thread:%s' % thread.get_thread_id())
+    for thread in db.threads(query):
+        tids.append('thread:%s' % thread.threadid)
 
     out(' or '.join(tids))
 

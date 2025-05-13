@@ -34,7 +34,7 @@ Install
     $ python setup.py install
 
 There are no dependencies if you are working with an existing database.  To
-build a new database, you need python-notmuch.
+build a new database, you need python-notmuch2.
 
 Quick Start
 -----------
